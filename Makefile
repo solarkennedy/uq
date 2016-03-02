@@ -6,3 +6,6 @@ uq: *.go
 
 clean:
 	rm uq
+
+test:
+	go test -v .
