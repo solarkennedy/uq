@@ -8,6 +8,9 @@ uq: *.go
 clean:
 	rm uq
 
+deps:
+	go get .
+
 test:
 	go test -v .
 
