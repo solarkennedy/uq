@@ -10,3 +10,8 @@ clean:
 
 test:
 	go test -v .
+
+deb: uq
+	fpm -s dir -t deb --prefix=/usr/bin/ --name=uq \
+	  --deb-user=root --deb-group=root \
+	  uq
