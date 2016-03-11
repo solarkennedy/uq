@@ -1,5 +1,6 @@
 run: uq
 	@cat itest/example.yaml | ./uq
+	@./uq itest/example.yaml
 
 uq: *.go
 	@go build .
