@@ -1,6 +1,10 @@
-run: uq
-	@cat itest/example.yaml | ./uq
-	@./uq itest/example.yaml
+.PHONY: itest clean
+
+itest: uq
+	cat itest/example.yaml | ./uq >/dev/null
+	./uq itest/example.yaml >/dev/null
+	cat itest/example.json | ./uq >/dev/null
+	./uq itest/example.json >/dev/null
 
 uq: *.go
 	@go build .
