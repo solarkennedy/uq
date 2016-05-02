@@ -10,14 +10,13 @@ import (
 	"github.com/ghodss/yaml"
 )
 
-func readData(format string, filename string) []byte {
-	var bytes []byte
+func readData(filename string) (bytes []byte, err error) {
 	if filename == "-" {
-		bytes, _ = ioutil.ReadAll(os.Stdin)
+		bytes, err = ioutil.ReadAll(os.Stdin)
 	} else {
-		bytes, _ = ioutil.ReadFile(os.Args[len(os.Args)-1])
+		bytes, err = ioutil.ReadFile(os.Args[len(os.Args)-1])
 	}
-	return bytes
+	return bytes, err
 }
 
 func parseData(input_data []byte, format string) (parsed_data interface{}, err error) {
@@ -34,9 +33,10 @@ func outputData(input_data interface{}, format string) (output_data []byte, err 
 	} else if format == "yaml" || format == "yml" || format == "auto" {
 		output_data, err = yaml.Marshal(input_data)
 	} else {
-		fmt.Println(string(json))
-		return 0
+		panic("Non supported output format")
 	}
+
+	return output_data, err
 }
 
 func parseArgs() map[string]interface{} {
@@ -64,13 +64,18 @@ func main() {
 	args := parseArgs()
 	fmt.Print("args: ")
 	fmt.Println(args)
+
 	var filename string
 	if args["FILE"] == nil {
 		filename = "-"
 	} else {
 		filename = args["FILE"].(string)
 	}
-	data := readData(args["--source"].(string), filename)
-	exitcode := outputData(data)
-	os.Exit(exitcode)
+	data, _ := readData(filename)
+
+	parsed_data, _ := parseData(data, args["--source"].(string))
+
+	output_data, _ := outputData(parsed_data, args["--target"].(string))
+
+	fmt.Println(string(output_data))
 }
