@@ -32,32 +32,31 @@ func outputData(data []byte) int {
 }
 
 func parseArgs() map[string]interface{} {
-	usage := `uq - Universal serialized data reader to JSON
+	usage := `uq - Universal (de)serializer
 
 Usage:
-  uq
-  uq <file>
-  uq --yaml
-  uq -h | --help
-  uq --version
+  uq [-s FORMAT] [-t FORMAT] [FILE]
 
 Options:
+  -s <FORMAT>, --source <FORMAT>  Specify input format. [default: auto]
+  -t <FORMAT>, --target <FORMAT>  Specify output format. [default: auto]
   -h --help     Show this screen
   --version     Show version
-  -y --yaml     Force reading input as YAML
 
-Examples:
-  cat input.yaml | uq | jq .
-  jq --yaml input.yaml | jq .
+Formats:
+  * json
+  * yaml|yml
 `
 
 	arguments, _ := docopt.Parse(usage, nil, true, "0.0.1", false)
-	fmt.Println(arguments)
 	return arguments
 }
 
 func main() {
-	parseArgs()
+	args := parseArgs()
+	fmt.Println("args:")
+	fmt.Println(args)
+	fmt.Println("Now data:")
 	data := readData()
 	exitcode := outputData(data)
 	os.Exit(exitcode)
