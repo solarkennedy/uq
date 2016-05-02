@@ -9,10 +9,9 @@ import (
 	"github.com/ghodss/yaml"
 )
 
-func readData() []byte {
+func readData(format string, filename string) []byte {
 	var bytes []byte
-	stat, _ := os.Stdin.Stat()
-	if (stat.Mode() & os.ModeCharDevice) == 0 {
+	if filename == "-" {
 		bytes, _ = ioutil.ReadAll(os.Stdin)
 	} else {
 		bytes, _ = ioutil.ReadFile(os.Args[len(os.Args)-1])
@@ -54,10 +53,15 @@ Formats:
 
 func main() {
 	args := parseArgs()
-	fmt.Println("args:")
+	fmt.Print("args: ")
 	fmt.Println(args)
-	fmt.Println("Now data:")
-	data := readData()
+	var filename string
+	if args["FILE"] == nil {
+		filename = "-"
+	} else {
+		filename = args["FILE"].(string)
+	}
+	data := readData(args["--source"].(string), filename)
 	exitcode := outputData(data)
 	os.Exit(exitcode)
 }
