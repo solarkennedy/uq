@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -19,11 +20,19 @@ func readData(format string, filename string) []byte {
 	return bytes
 }
 
-func outputData(data []byte) int {
-	json, err := yaml.YAMLToJSON(data)
-	if err != nil {
-		fmt.Printf("err: %v\n", err)
-		return 1
+func parseData(input_data []byte, format string) (parsed_data interface{}, err error) {
+	// TODO: Support more formats :)
+	err = yaml.Unmarshal(input_data, &parsed_data)
+	return parsed_data, err
+}
+
+func outputData(input_data interface{}, format string) (output_data []byte, err error) {
+	// TODO: Support more formats
+	if format == "json" {
+		output_data, err = json.MarshalIndent(input_data, "", "  ")
+		// TODO: Detect auto better
+	} else if format == "yaml" || format == "yml" || format == "auto" {
+		output_data, err = yaml.Marshal(input_data)
 	} else {
 		fmt.Println(string(json))
 		return 0
