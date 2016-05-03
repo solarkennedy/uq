@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"os"
 
 	"github.com/docopt/docopt-go"
@@ -51,12 +52,13 @@ func parseArgs() map[string]interface{} {
 	usage := `uq - Universal (de)serializer
 
 Usage:
-  uq [-s FORMAT] [-t FORMAT] [FILE]
+  uq [-v] [-s FORMAT] [-t FORMAT] [FILE]
 
 Options:
   -s <FORMAT>, --source <FORMAT>  Specify input format. [default: auto]
   -t <FORMAT>, --target <FORMAT>  Specify output format. [default: json]
-  -h --help     Show this screen
+  -v, --verbose                   Be more verbose [default: false]
+  -h, --help     Show this screen
   --version     Show version
 
 Formats:
@@ -70,8 +72,11 @@ Formats:
 
 func main() {
 	args := parseArgs()
-	fmt.Print("args: ")
-	fmt.Println(args)
+	verbose := args["--verbose"].(bool)
+
+	if verbose == true {
+		log.Printf("Debug: args - %q", args)
+	}
 
 	var filename string
 	if args["FILE"] == nil {
