@@ -20,23 +20,31 @@ func readData(filename string) (bytes []byte, err error) {
 }
 
 func parseData(input_data []byte, format string) (parsed_data interface{}, err error) {
-	// TODO: Support more formats :)
-	err = yaml.Unmarshal(input_data, &parsed_data)
+	if format == "json" {
+		err = json.Unmarshal(input_data, &parsed_data)
+	} else if format == "yaml" || format == "yml" {
+		err = yaml.Unmarshal(input_data, &parsed_data)
+	} else {
+		panic("Non support inport format")
+	}
 	return parsed_data, err
 }
 
 func outputData(input_data interface{}, format string) (output_data []byte, err error) {
-	// TODO: Support more formats
 	if format == "json" {
 		output_data, err = json.MarshalIndent(input_data, "", "  ")
-		// TODO: Detect auto better
-	} else if format == "yaml" || format == "yml" || format == "auto" {
+	} else if format == "yaml" || format == "yml" {
 		output_data, err = yaml.Marshal(input_data)
 	} else {
 		panic("Non supported output format")
 	}
 
 	return output_data, err
+}
+
+func detectInputFormat(data []byte) (detected_format string) {
+	// TODO: Some sort of input detection
+	return "yaml"
 }
 
 func parseArgs() map[string]interface{} {
@@ -47,7 +55,7 @@ Usage:
 
 Options:
   -s <FORMAT>, --source <FORMAT>  Specify input format. [default: auto]
-  -t <FORMAT>, --target <FORMAT>  Specify output format. [default: auto]
+  -t <FORMAT>, --target <FORMAT>  Specify output format. [default: json]
   -h --help     Show this screen
   --version     Show version
 
@@ -73,7 +81,13 @@ func main() {
 	}
 	data, _ := readData(filename)
 
-	parsed_data, _ := parseData(data, args["--source"].(string))
+	var input_format string
+	if args["--source"].(string) == "auto" {
+		input_format = detectInputFormat(data)
+	} else {
+		input_format = args["--source"].(string)
+	}
+	parsed_data, _ := parseData(data, input_format)
 
 	output_data, _ := outputData(parsed_data, args["--target"].(string))
 
