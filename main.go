@@ -7,6 +7,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/clbanning/mxj"
 	"github.com/docopt/docopt-go"
 	"github.com/ghodss/yaml"
 )
@@ -15,7 +16,7 @@ func readData(filename string) (bytes []byte, err error) {
 	if filename == "-" {
 		bytes, err = ioutil.ReadAll(os.Stdin)
 	} else {
-		bytes, err = ioutil.ReadFile(os.Args[len(os.Args)-1])
+		bytes, err = ioutil.ReadFile(filename)
 	}
 	return bytes, err
 }
@@ -25,6 +26,11 @@ func parseData(input_data []byte, format string) (parsed_data interface{}, err e
 		err = json.Unmarshal(input_data, &parsed_data)
 	} else if format == "yaml" || format == "yml" {
 		err = yaml.Unmarshal(input_data, &parsed_data)
+	} else if format == "xml" {
+		// TODO: Is this the right way to handle xml?
+		m := make(map[string]interface{})
+		m, err = mxj.NewMapXml(input_data)
+		return m, err
 	} else {
 		panic("Non support inport format")
 	}
@@ -36,6 +42,8 @@ func outputData(input_data interface{}, format string) (output_data []byte, err 
 		output_data, err = json.MarshalIndent(input_data, "", "  ")
 	} else if format == "yaml" || format == "yml" {
 		output_data, err = yaml.Marshal(input_data)
+	} else if format == "xml" {
+		output_data, err = mxj.AnyXmlIndent(input_data, "", "\t")
 	} else {
 		panic("Non supported output format")
 	}
@@ -64,6 +72,7 @@ Options:
 Formats:
   * json
   * yaml|yml
+  * xml (Note: xml won't be a perfect conversion)
 `
 
 	arguments, _ := docopt.Parse(usage, nil, true, "0.0.1", false)
@@ -92,7 +101,11 @@ func main() {
 	} else {
 		input_format = args["--source"].(string)
 	}
-	parsed_data, _ := parseData(data, input_format)
+	parsed_data, err := parseData(data, input_format)
+	if err != nil {
+		fmt.Println("ERROR")
+		fmt.Println(err)
+	}
 
 	output_data, _ := outputData(parsed_data, args["--target"].(string))
 

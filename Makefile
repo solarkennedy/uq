@@ -5,6 +5,8 @@ itest: uq
 	./uq itest/example.yaml >/dev/null
 	cat itest/example.json | ./uq >/dev/null
 	./uq itest/example.json >/dev/null
+	cat itest/example.xml | ./uq -s xml >/dev/null
+	./uq itest/example.xml >/dev/null
 
 uq: *.go
 	@go build .
