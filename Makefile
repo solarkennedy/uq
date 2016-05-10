@@ -1,12 +1,10 @@
 .PHONY: itest clean
 
 itest: uq
-	cat itest/example.yaml | ./uq >/dev/null
-	./uq itest/example.yaml >/dev/null
-	cat itest/example.json | ./uq >/dev/null
-	./uq itest/example.json >/dev/null
-	cat itest/example.xml | ./uq -s xml >/dev/null
-	./uq itest/example.xml >/dev/null
+	./uq itest/example.yaml -s yaml | grep -q '"comments": "Late afternoon is best. Backup contact is Nancy Billsmer @ 338-4338.\\n",'
+	./uq itest/example.json -s json | grep -q '"parse_time_nanoseconds": 127664,'
+	./uq itest/example.xml  -s xml  | grep -q '"description": "Two of our famous Belgian Waffles with plenty of real maple syrup",'
+	@echo "itest pass"
 
 uq: *.go
 	@go build .
