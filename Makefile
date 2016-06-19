@@ -4,6 +4,7 @@ itest: uq
 	./uq itest/example.yaml -s yaml | grep -q '"comments": "Late afternoon is best. Backup contact is Nancy Billsmer @ 338-4338.\\n",'
 	./uq itest/example.json -s json | grep -q '"parse_time_nanoseconds": 127664,'
 	./uq itest/example.xml  -s xml  | grep -q '"description": "Two of our famous Belgian Waffles with plenty of real maple syrup",'
+	./uq itest/example.toml -s toml | grep -q '"title": "TOML Example"'
 	@echo "itest pass"
 
 uq: *.go

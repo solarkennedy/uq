@@ -16,5 +16,5 @@ Options:
 Formats:
   * json
   * yaml|yml
+  * toml
   * xml (Note: xml won't be a perfect conversion)
-```

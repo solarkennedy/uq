@@ -1,12 +1,14 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
 
+	"github.com/BurntSushi/toml"
 	"github.com/clbanning/mxj"
 	"github.com/docopt/docopt-go"
 	"github.com/ghodss/yaml"
@@ -26,6 +28,8 @@ func parseData(input_data []byte, format string) (parsed_data interface{}, err e
 		err = json.Unmarshal(input_data, &parsed_data)
 	} else if format == "yaml" || format == "yml" {
 		err = yaml.Unmarshal(input_data, &parsed_data)
+	} else if format == "toml" {
+		err = toml.Unmarshal(input_data, &parsed_data)
 	} else if format == "xml" {
 		// TODO: Is this the right way to handle xml?
 		m := make(map[string]interface{})
@@ -42,6 +46,11 @@ func outputData(input_data interface{}, format string) (output_data []byte, err 
 		output_data, err = json.MarshalIndent(input_data, "", "  ")
 	} else if format == "yaml" || format == "yml" {
 		output_data, err = yaml.Marshal(input_data)
+	} else if format == "toml" {
+		var buf bytes.Buffer
+		toml_enc := toml.NewEncoder(&buf)
+		err = toml_enc.Encode(input_data)
+		output_data = buf.Bytes()
 	} else if format == "xml" {
 		output_data, err = mxj.AnyXmlIndent(input_data, "", "\t")
 	} else {
@@ -72,6 +81,7 @@ Options:
 Formats:
   * json
   * yaml|yml
+  * toml
   * xml (Note: xml won't be a perfect conversion)
 `
 
