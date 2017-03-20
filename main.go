@@ -113,8 +113,7 @@ func main() {
 	}
 	parsed_data, err := parseData(data, input_format)
 	if err != nil {
-		fmt.Println("ERROR")
-		fmt.Println(err)
+		log.Fatal(err)
 	}
 
 	output_data, _ := outputData(parsed_data, args["--target"].(string))
