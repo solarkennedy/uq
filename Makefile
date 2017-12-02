@@ -1,4 +1,6 @@
 .PHONY: itest clean
+uq: *.go
+	@go build .
 
 itest: uq
 	./uq itest/example.yaml -s yaml | grep -q '"comments": "Late afternoon is best. Backup contact is Nancy Billsmer @ 338-4338.\\n",'
@@ -6,9 +8,6 @@ itest: uq
 	./uq itest/example.xml  -s xml  | grep -q '"description": "Two of our famous Belgian Waffles with plenty of real maple syrup",'
 	./uq itest/example.toml -s toml | grep -q '"title": "TOML Example"'
 	@echo "itest pass"
-
-uq: *.go
-	@go build .
 
 clean:
 	rm uq
