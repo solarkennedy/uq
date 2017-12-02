@@ -14,7 +14,7 @@ clean:
 	rm uq
 
 deps:
-	go get .
+	dep ensure
 
 test:
 	go test -v .
