@@ -14,6 +14,8 @@ import (
 	"github.com/ghodss/yaml"
 )
 
+var version string
+
 func readData(filename string) (bytes []byte, err error) {
 	if filename == "-" {
 		bytes, err = ioutil.ReadAll(os.Stdin)
@@ -85,7 +87,7 @@ Formats:
   * xml (Note: xml won't be a perfect conversion)
 `
 
-	arguments, _ := docopt.Parse(usage, nil, true, "0.0.1", false)
+	arguments, _ := docopt.Parse(usage, nil, true, version, false)
 	return arguments
 }
 

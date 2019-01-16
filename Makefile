@@ -1,6 +1,9 @@
 .PHONY: itest clean
+
+VERSION=0.0.3
+
 uq: *.go
-	@go build .
+	go build -ldflags "-X main.version=$(VERSION)" .
 
 itest: uq
 	./uq itest/example.yaml -s yaml | grep -q '"comments": "Late afternoon is best. Backup contact is Nancy Billsmer @ 338-4338.\\n",'
@@ -21,4 +24,8 @@ test:
 deb: uq
 	fpm -s dir -t deb --prefix=/usr/bin/ --name=uq \
 	  --deb-user=root --deb-group=root \
+	  --version=$(VERSION) \
 	  uq
+
+fmt:
+	go fmt *.go
