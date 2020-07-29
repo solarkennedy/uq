@@ -15,9 +15,6 @@ itest: uq
 clean:
 	rm uq
 
-deps:
-	dep ensure
-
 test:
 	go test -v .
 

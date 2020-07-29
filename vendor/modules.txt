@@ -1,0 +1,10 @@
+# github.com/BurntSushi/toml v0.3.0
+github.com/BurntSushi/toml
+# github.com/clbanning/mxj v1.6.1
+github.com/clbanning/mxj
+# github.com/docopt/docopt-go v0.0.0-20160216232012-784ddc588536
+github.com/docopt/docopt-go
+# github.com/ghodss/yaml v1.0.0
+github.com/ghodss/yaml
+# gopkg.in/yaml.v2 v2.0.0-20171116090243-287cf08546ab
+gopkg.in/yaml.v2

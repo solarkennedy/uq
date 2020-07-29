@@ -95,7 +95,7 @@ func main() {
 	args := parseArgs()
 	verbose := args["--verbose"].(bool)
 
-	if verbose == true {
+	if verbose {
 		log.Printf("Debug: args - %q", args)
 	}
 
