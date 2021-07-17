@@ -1,6 +1,6 @@
 .PHONY: itest clean
 
-VERSION=0.0.3
+VERSION=$(shell git describe --abbrev=0 --tags)
 
 uq: *.go
 	go build -ldflags "-X main.version=$(VERSION)" .

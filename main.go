@@ -14,7 +14,12 @@ import (
 	"github.com/ghodss/yaml"
 )
 
-var version string
+var (
+    version = "dev"
+    commit  = "none"
+    date    = "unknown"
+    builtBy = "unknown"
+)
 
 func readData(filename string) (bytes []byte, err error) {
 	if filename == "-" {
