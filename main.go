@@ -15,10 +15,7 @@ import (
 )
 
 var (
-    version = "dev"
-    commit  = "none"
-    date    = "unknown"
-    builtBy = "unknown"
+	version = "dev"
 )
 
 func readData(filename string) (bytes []byte, err error) {
@@ -39,8 +36,7 @@ func parseData(input_data []byte, format string) (parsed_data interface{}, err e
 		err = toml.Unmarshal(input_data, &parsed_data)
 	} else if format == "xml" {
 		// TODO: Is this the right way to handle xml?
-		m := make(map[string]interface{})
-		m, err = mxj.NewMapXml(input_data)
+		m, err := mxj.NewMapXml(input_data)
 		return m, err
 	} else {
 		panic("Non support inport format")
