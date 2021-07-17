@@ -12,6 +12,7 @@ import (
 	"github.com/clbanning/mxj"
 	"github.com/docopt/docopt-go"
 	"github.com/ghodss/yaml"
+	"gopkg.in/ini.v1"
 )
 
 var (
@@ -27,6 +28,24 @@ func readData(filename string) (bytes []byte, err error) {
 	return bytes, err
 }
 
+func loadIni(input_data []byte) interface{} {
+	cfg, err := ini.Load(input_data)
+	if err != nil {
+		panic(err)
+	}
+	output := map[string]interface{}{}
+	for k, v := range cfg.Section("").KeysHash() {
+		output[k] = v
+	}
+	for _, section := range cfg.Sections() {
+		if section.Name() == ini.DefaultSection {
+			continue
+		}
+		output[section.Name()] = section.KeysHash()
+	}
+	return output
+}
+
 func parseData(input_data []byte, format string) (parsed_data interface{}, err error) {
 	if format == "json" {
 		err = json.Unmarshal(input_data, &parsed_data)
@@ -38,6 +57,8 @@ func parseData(input_data []byte, format string) (parsed_data interface{}, err e
 		// TODO: Is this the right way to handle xml?
 		m, err := mxj.NewMapXml(input_data)
 		return m, err
+	} else if format == "ini" {
+		parsed_data = loadIni(input_data)
 	} else {
 		panic("Non support inport format")
 	}
@@ -85,6 +106,7 @@ Formats:
   * json
   * yaml|yml
   * toml
+  * ini
   * xml (Note: xml won't be a perfect conversion)
 `
 
