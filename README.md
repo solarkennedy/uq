@@ -1,6 +1,6 @@
 # uq - Universal (de)serializer
 
-[![Build Status](https://travis-ci.org/solarkennedy/uq.svg?branch=master)](https://travis-ci.org/solarkennedy/uq)
+[![Go](https://github.com/solarkennedy/uq/actions/workflows/go.yml/badge.svg)](https://github.com/solarkennedy/uq/actions/workflows/go.yml)
 
 ```
 Usage:
@@ -16,5 +16,6 @@ Options:
 Formats:
   * json
   * yaml|yml
+  * ini
   * toml
   * xml (Note: xml won't be a perfect conversion)
