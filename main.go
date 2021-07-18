@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"bytes"
 	"encoding/json"
 	"fmt"
@@ -46,6 +47,22 @@ func loadIni(input_data []byte) interface{} {
 	return output
 }
 
+func saveIni(input interface{}) ([]byte, error) {
+	i := ini.Empty()
+	err := i.Append(map[string]string{"foo": "bar"})
+	if err != nil {
+		panic(err)
+	}
+	w := new(bufio.Writer)
+	r := new(bufio.Reader)
+	b := bufio.NewReadWriter(r, w)
+	_, err = i.WriteTo(b)
+	if err != nil {
+		panic(err)
+	}
+	return ioutil.ReadAll(b)
+}
+
 func parseData(input_data []byte, format string) (parsed_data interface{}, err error) {
 	if format == "json" {
 		err = json.Unmarshal(input_data, &parsed_data)
@@ -77,6 +94,8 @@ func outputData(input_data interface{}, format string) (output_data []byte, err 
 		output_data = buf.Bytes()
 	} else if format == "xml" {
 		output_data, err = mxj.AnyXmlIndent(input_data, "", "\t")
+	} else if format == "ini" {
+		output_data, err = saveIni(input_data)
 	} else {
 		panic("Non supported output format")
 	}
